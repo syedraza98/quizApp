@@ -12,7 +12,7 @@ app.secret_key = "lmzfsildfxi78dfzydusy7dyf78dyfzs8odfmyos"
 
 def db_connection():
     # conn = psycopg2.connect(host='127.0.0.1', database='quiz_app', user='postgres', password='Shalish1998@')
-    conn = psycopg2.connect(host='dpg-cfke1o5a49903fnhlj30-a.oregon-postgres.render.com', database='quiz_app_095d', user='shalish', password='bwROkhzjHVRU0JHZHGVIRGQUSvS8HaXu')
+    conn = psycopg2.connect(host="dpg-cfke1o5a49903fnhlj30-a.oregon-postgres.render.com", database="quiz_app_095d", user="shalish", password="bwROkhzjHVRU0JHZHGVIRGQUSvS8HaXu")
     return conn
 
 @app.route("/")
