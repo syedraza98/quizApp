@@ -8,9 +8,11 @@ from werkzeug.security import generate_password_hash,check_password_hash
 app = Flask(__name__)
 CORS(app)
 app.secret_key = "lmzfsildfxi78dfzydusy7dyf78dyfzs8odfmyos"
+# postgres://shalish:bwROkhzjHVRU0JHZHGVIRGQUSvS8HaXu@dpg-cfke1o5a49903fnhlj30-a.oregon-postgres.render.com/quiz_app_095d
 
 def db_connection():
-    conn = psycopg2.connect(host='127.0.0.1', database='quiz_app', user='postgres', password='Shalish1998@')
+    # conn = psycopg2.connect(host='127.0.0.1', database='quiz_app', user='postgres', password='Shalish1998@')
+    conn = psycopg2.connect(host='dpg-cfke1o5a49903fnhlj30-a.oregon-postgres.render.com', database='quiz_app_095d', user='shalish', password='bwROkhzjHVRU0JHZHGVIRGQUSvS8HaXu')
     return conn
 
 @app.route("/")
@@ -28,12 +30,13 @@ def register():
     password = request.form['password']
     con=db_connection()
     cur= con.cursor()
-    query='INSERT INTO public."user" (name,password,email) VALUES (%s,%s,%s)'
+    query=f'INSERT INTO public."user" (email, "name", "password") VALUES (%s,%s,%s)'
     try:
-        cur.execute(query, (name,generate_password_hash(password),email))
+        cur.execute(query, (email, name,generate_password_hash(password)))
         con.commit()
-    except:
-        return render_template("index.html",status=0,msg="Email Exist")
+    except Exception as e:
+        # return render_template("index.html",status=0,msg="Email Exist")
+        return traceback.format_exc()
 
     return render_template("index.html", status=1,msg="Registered please Login:)")
 
