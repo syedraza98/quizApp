@@ -1,0 +1,49 @@
+{%extends 'base.html'%}
+{%block body%}
+<div class="container-fluid" style="    justify-content: center;display: grid;">
+
+<nav class="navbar navbar-light bg-light">
+  <div class="container-fluid">
+      <h3>Hi {{ current_user }}</h3>
+
+      <a href="{{ url_for('logout')}}"><button class="btn btn-danger">Logout</button></a>
+  </div>
+</nav>
+
+
+  <div class="quiz-container" id="quiz">
+    <div class="quiz-header">
+      <h2 >Fun Quiz Result</h2>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Email</th>
+      <th scope="col">Score</th>
+<!--      <th scope="col">Handle</th>-->
+    </tr>
+  </thead>
+  <tbody>
+  {% for item in data%}
+    <tr>
+        <th scope="row">{{loop.index}}</th>
+        <td>{{item[1]}}</td>
+        <td>{{item[2]}}</td>
+    </tr>
+  {%endfor%}
+
+
+  </tbody>
+</table>
+
+    </div>
+
+      <a href="{{ url_for('dashboard')}}"><button class="btn btn-info">Go To Home</button></a>
+
+  </div>
+</div>
+
+
+<!--  <script src="/static/script.js"></script>-->
+
+{%endblock%}

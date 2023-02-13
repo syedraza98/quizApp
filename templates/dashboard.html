@@ -1,0 +1,31 @@
+{%extends 'base.html'%}
+{%block body%}
+<div class="container-fluid" style="    justify-content: center;display: grid;">
+
+<nav class="navbar navbar-light bg-light">
+  <div class="container-fluid">
+      <h3>Hi {{ current_user }}</h3>
+
+      <a href="{{ url_for('logout')}}"><button class="btn btn-danger">Logout</button></a>
+  </div>
+</nav>
+
+
+  <div class="quiz-container" id="quiz">
+    <div class="quiz-header">
+      <h2 >Welcome to Fun Quiz</h2>
+
+      <a href="{{ url_for('quiz_home')}}"><button class="btn btn-success">Start Quiz</button></a>
+        <hr/>
+      <a href="{{ url_for('show_result')}}"><button class="btn btn-primary">Show Previous Results</button></a>
+
+    </div>
+
+
+  </div>
+</div>
+
+
+<!--  <script src="/static/script.js"></script>-->
+
+{%endblock%}

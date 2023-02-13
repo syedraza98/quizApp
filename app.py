@@ -19,7 +19,7 @@ def db_connection():
 def index():
     try:
         if session['current_user']:
-            return render_template("quiz.html", current_user=session['current_user'])
+            return render_template("dashboard.html", current_user=session['current_user'])
     except:
         return render_template("index.html")
 
@@ -35,8 +35,8 @@ def register():
         cur.execute(query, (email, name,generate_password_hash(password)))
         con.commit()
     except Exception as e:
-        # return render_template("index.html",status=0,msg="Email Exist")
-        return traceback.format_exc()
+        return render_template("index.html",status=0,msg="Email Exist")
+        # return traceback.format_exc()
 
     return render_template("index.html", status=1,msg="Registered please Login:)")
 
@@ -54,11 +54,19 @@ def log_in():
         return render_template("index.html", status=2, msg="Email Not Registered:(")
     else:
         if check_password_hash(data[0][3],password):
+            session['email'] = current_user = data[0][1]
             session['current_user'] = current_user=data[0][2]
-            return redirect(url_for('quiz_home',current_user=data[0][2]))
+            return redirect(url_for('dashboard',current_user=data[0][2]))
         else:
             return render_template("index.html", status=3, msg="Password InCorrect")
 
+@app.route("/dashboard")
+def dashboard():
+    try:
+        if session['current_user']:
+            return render_template("dashboard.html", current_user=session['current_user'])
+    except:
+        return redirect(url_for('index'))
 @app.route("/quiz_home")
 def quiz_home():
     try:
@@ -70,6 +78,42 @@ def quiz_home():
 def logout():
     session.clear()
     return redirect(url_for('index'))
+
+@app.route("/save_result/<score>")
+def save_result(score):
+    try:
+        if session['current_user']:
+            email = session['email']
+            # score = request.form['score']
+            con = db_connection()
+            cur = con.cursor()
+            query = f'INSERT INTO public."result" (email, "score") VALUES (%s,%s)'
+            try:
+                cur.execute(query, (email, score))
+                con.commit()
+                return {"msg":"Score Saved"}
+            except Exception as e:
+                return traceback.format_exc()
+    except:
+        return redirect(url_for('index'))
+
+@app.route("/show_result")
+def show_result():
+    try:
+        if session['current_user']:
+            email = session['email']
+
+            con = db_connection()
+            cur = con.cursor()
+            query = f'SELECT * FROM public."result" WHERE email ='+"'"+email+"'"
+            try:
+                cur.execute(query)
+                data = cur.fetchall()
+                return render_template("result.html", current_user=session['current_user'], data=data)
+            except Exception as e:
+                return traceback.format_exc()
+    except:
+        return redirect(url_for('index'))
 
 if __name__ == "__main__":
     app.run(debug=True)

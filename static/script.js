@@ -65,10 +65,14 @@ submitBtn.addEventListener('click', () => {
        if(currentQuiz < quizData.length) {
            loadQuiz()
        } else {
+           fetch("http://127.0.0.1:5000/save_result/"+score)
+                  .then((response) => response.json())
+                  .then((data) => {
+                  console.log(data)
+                  })
            quiz.innerHTML = `
            <h2>You answered ${score}/${quizData.length} questions correctly</h2>
-
-           <button onclick="location.reload()">Reload</button>
+           <button onclick="window.location.replace('http://127.0.0.1:5000/dashboard')">Go Back To Home</button>
            `
        }
     }
