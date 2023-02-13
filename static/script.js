@@ -65,7 +65,7 @@ submitBtn.addEventListener('click', () => {
        if(currentQuiz < quizData.length) {
            loadQuiz()
        } else {
-           fetch("http://127.0.0.1:5000/save_result/"+score)
+           fetch("https://quizapp-r7gk.onrender.com/save_result/"+score)
                   .then((response) => response.json())
                   .then((data) => {
                   console.log(data)
