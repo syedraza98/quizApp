@@ -1,5 +1,4 @@
 import traceback
-
 from flask import *
 import psycopg2
 from flask_cors import CORS
@@ -8,12 +7,18 @@ from werkzeug.security import generate_password_hash,check_password_hash
 app = Flask(__name__)
 CORS(app)
 app.secret_key = "lmzfsildfxi78dfzydusy7dyf78dyfzs8odfmyos"
-# postgres://shalish:bwROkhzjHVRU0JHZHGVIRGQUSvS8HaXu@dpg-cfke1o5a49903fnhlj30-a.oregon-postgres.render.com/quiz_app_095d
+# postgres://quiz_app_w6ji_user:ZwgvgHgfxCaWJbii1kKQbYDz4FLKUoTO@dpg-cfo9rpirrk0fd9vu7ni0-a.oregon-postgres.render.com/quiz_app_w6ji
+
+# db_user = os.environ.get('CLOUD_SQL_USERNAME')
+# db_password = os.environ.get('CLOUD_SQL_PASSWORD')
+# db_name = os.environ.get('CLOUD_SQL_DATABASE_NAME')
+# db_connection_name = os.environ.get('CLOUD_SQL_CONNECTION_NAME')
+
 
 def db_connection():
-    # conn = psycopg2.connect(host='127.0.0.1', database='quiz_app', user='postgres', password='Shalish1998@')
-    conn = psycopg2.connect(host="dpg-cfke1o5a49903fnhlj30-a.oregon-postgres.render.com", database="quiz_app_095d", user="shalish", password="bwROkhzjHVRU0JHZHGVIRGQUSvS8HaXu")
+    conn = psycopg2.connect(host='prod-app.postgres.database.azure.com', database='postgres', user='azure_quiz_app@prod-app', password='Sunny@123')
     return conn
+
 
 @app.route("/")
 def index():
@@ -23,6 +28,8 @@ def index():
     except:
         return render_template("index.html")
 
+
+
 @app.route("/register", methods=["POST"])
 def register():
     name = request.form['name']
@@ -30,12 +37,14 @@ def register():
     password = request.form['password']
     con=db_connection()
     cur= con.cursor()
-    query=f'INSERT INTO public."user" (email, "name", "password") VALUES (%s,%s,%s)'
+
+    query=f'INSERT INTO "user" (email, "name", "password") VALUES (%s,%s,%s)'
+    print(query)
     try:
         cur.execute(query, (email, name,generate_password_hash(password)))
         con.commit()
     except Exception as e:
-        return render_template("index.html",status=0,msg="Email Exist")
+        return render_template("index.html",status=0,msg=str(e))
         # return traceback.format_exc()
 
     return render_template("index.html", status=1,msg="Registered please Login:)")
